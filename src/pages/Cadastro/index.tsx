@@ -159,13 +159,13 @@ function Cadastro() {
         formikRef.current?.setFieldValue('num_endereco', data.num_endereco);
         formikRef.current?.setFieldValue('localidade', data.localidade);
         formikRef.current?.setFieldValue('bairro', data.bairro);
-      }
 
-      addToast({
-        type: 'success',
-        title: 'CPF já está cadastrado',
-        description: 'Você pode atualizar os dados do cadastro',
-      });
+        addToast({
+          type: 'success',
+          title: 'CPF já está cadastrado',
+          description: 'Você pode atualizar os dados do cadastro',
+        });
+      }
     }
   }
 

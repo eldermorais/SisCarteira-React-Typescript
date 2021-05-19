@@ -2,7 +2,7 @@ import styled, { keyframes } from 'styled-components';
 import signInBackground from '../../assets/background-signin.png';
 
 export const Container = styled.div`
-  height: 100%;
+  height: calc(100vh - 60px);
   display: flex;
   align-items: stretch;
   flex: 1;
