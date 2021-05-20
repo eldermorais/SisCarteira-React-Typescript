@@ -67,7 +67,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       identifier,
       password,
     });
-    console.log(response.data);
 
     const { jwt, user } = response.data;
 

@@ -13,6 +13,7 @@
     "axios": "^0.21.1",
     "formik": "^2.2.6",
     "framer-motion": "^4.1.16",
+    "hamburger-react": "^2.4.1",
     "history": "^4.10.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

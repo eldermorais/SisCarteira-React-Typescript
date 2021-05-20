@@ -1,13 +1,19 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+interface SideBarProps {
+  isOpen: boolean;
+}
+
+export const Container = styled.div<SideBarProps>`
   background: #312e38;
   min-width: 250px;
   padding: 8px 8px;
   border-radius: 0 10px 10px 0;
   display: flex;
   flex-direction: column;
-
+  > div {
+    display: none;
+  }
   a {
     display: flex;
     align-items: center;
@@ -29,6 +35,29 @@ export const Container = styled.div`
 
     svg {
       margin-right: 8px;
+    }
+  }
+
+  @media (max-width: 994px) {
+    position: absolute;
+
+    left: -250px;
+    transition: all 0.3s;
+    height: 100%;
+
+    ${(props) =>
+      props.isOpen &&
+      css`
+        height: 100%;
+
+        left: 0;
+        transition: all 0.3s;
+      `}
+
+    > div {
+      display: block;
+      position: absolute;
+      left: 240px;
     }
   }
 `;

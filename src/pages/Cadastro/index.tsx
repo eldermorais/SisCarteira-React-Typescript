@@ -202,6 +202,8 @@ function Cadastro() {
                 type="text"
                 onBlur={getDeficiente}
                 maxLength={11}
+                autoFocus
+                // required
               />
             </label>
             <label htmlFor="nome">
@@ -211,6 +213,11 @@ function Cadastro() {
           </FormGroup1>
 
           <FormGroup2>
+            <label htmlFor="ativo">
+              Ativo
+              <Input id="ativo" name="ativo" type="checkbox" icon={FiCheck} />
+            </label>
+
             <label htmlFor="deficiencia">
               Deficiência
               <Input as="select" id="deficiencia" name="deficiencia">
@@ -223,6 +230,7 @@ function Cadastro() {
                 ))}
               </Input>
             </label>
+
             <label htmlFor="data_nascimento">
               Data de Nascimento
               <Input
@@ -231,10 +239,6 @@ function Cadastro() {
                 placeholder="Data de Nascimento"
                 type="date"
               />
-            </label>
-            <label htmlFor="ativo">
-              Ativo
-              <Input id="ativo" name="ativo" type="checkbox" icon={FiCheck} />
             </label>
           </FormGroup2>
 

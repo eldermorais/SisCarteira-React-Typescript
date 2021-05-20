@@ -9,6 +9,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  z-index: 2;
 
   & div {
     display: flex;
@@ -41,6 +42,14 @@ export const Container = styled.div`
 
       &:hover {
         filter: brightness(0.8);
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    & div + div {
+      a span {
+        display: none;
       }
     }
   }

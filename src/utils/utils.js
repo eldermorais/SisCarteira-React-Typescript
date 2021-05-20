@@ -2,6 +2,7 @@ export function testaCPF(strCPF) {
   var Soma;
   var Resto;
   Soma = 0;
+  if (strCPF.length === 0) return true;
   if (
     strCPF.length !== 11 ||
     strCPF === '00000000000' ||

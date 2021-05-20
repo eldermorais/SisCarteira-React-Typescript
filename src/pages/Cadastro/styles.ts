@@ -12,6 +12,7 @@ export const Container = styled.div`
 
   label {
     color: #f4ede8;
+    margin-left: 24px;
   }
 
   Form {
@@ -24,7 +25,13 @@ export const Container = styled.div`
 
     button {
       width: 250px;
-      margin-top: 32px;
+      margin: 32px 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    form {
+      width: 90%;
     }
   }
 `;
@@ -34,6 +41,11 @@ export const FormGroup1 = styled.div`
   grid-template-columns: 1fr 3fr;
   gap: 16px;
   margin-bottom: 16px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    display: block;
+  }
 `;
 
 export const FormGroup2 = styled.div`
@@ -52,6 +64,15 @@ export const FormGroup2 = styled.div`
       background: #232129;
     }
   }
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    select {
+      width: 100%;
+    }
+  }
 `;
 
 export const FormGroup3 = styled.div`
@@ -63,6 +84,11 @@ export const FormGroup3 = styled.div`
   input {
     width: 100%;
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    display: block;
+  }
 `;
 
 export const FormGroup4 = styled.div`
@@ -73,5 +99,10 @@ export const FormGroup4 = styled.div`
 
   input {
     width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    display: block;
   }
 `;

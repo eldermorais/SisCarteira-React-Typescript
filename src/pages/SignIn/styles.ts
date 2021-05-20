@@ -6,6 +6,10 @@ export const Container = styled.div`
   display: flex;
   align-items: stretch;
   flex: 1;
+
+  img {
+    z-index: 0;
+  }
 `;
 
 const appearFrontLeft = keyframes`
