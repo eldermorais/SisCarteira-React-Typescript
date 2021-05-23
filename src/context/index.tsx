@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 import { AuthProvider } from './AuthContext';
+import { DeficienteProvider } from './DeficienteContext';
 import { ToastProvider } from './ToastContext';
 
 interface AppProviderProps {
@@ -10,7 +11,9 @@ interface AppProviderProps {
 function AppProvider({ children }: AppProviderProps) {
   return (
     <AuthProvider>
-      <ToastProvider>{children}</ToastProvider>
+      <DeficienteProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </DeficienteProvider>
     </AuthProvider>
   );
 }

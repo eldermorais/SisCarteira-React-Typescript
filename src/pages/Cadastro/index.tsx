@@ -15,6 +15,7 @@ import { FiCheck } from 'react-icons/fi';
 import axios from 'axios';
 import { useToast } from '../../context/ToastContext';
 import { testaCPF } from '../../utils/utils';
+import { useDeficiente } from '../../context/DeficienteContext';
 
 interface DeficienciaFormData {
   id: number;
@@ -42,6 +43,7 @@ function Cadastro() {
   const [deficiente, setDeficiente] = useState<RegisterFormData>();
 
   const { addToast } = useToast();
+  const { load } = useDeficiente();
 
   const formikRef = useRef<FormikProps<RegisterFormData>>(null);
 
@@ -61,12 +63,18 @@ function Cadastro() {
       try {
         if (deficiente?.id) {
           await api.put(`deficientes/${deficiente.id}`, data);
+
+          formikRef.current && formikRef.current.resetForm();
+
           addToast({
             type: 'success',
             title: 'Cadastro atualizado com Sucesso',
           });
         } else {
           await api.post('deficientes', data);
+
+          // formikRef.current && formikRef.current.resetForm();
+
           addToast({
             type: 'success',
             title: 'Cadastro Realizado com Sucesso',
@@ -103,10 +111,13 @@ function Cadastro() {
         });
         return;
       }
-      formikRef.current?.setFieldValue('uf', data.uf);
-      formikRef.current?.setFieldValue('logradouro', data.logradouro);
-      formikRef.current?.setFieldValue('localidade', data.localidade);
-      formikRef.current?.setFieldValue('bairro', data.bairro);
+      if (formikRef.current) {
+        const { setFieldValue } = formikRef.current;
+        setFieldValue('uf', data.uf);
+        setFieldValue('logradouro', data.logradouro);
+        setFieldValue('localidade', data.localidade);
+        setFieldValue('bairro', data.bairro);
+      }
     } catch (err) {
       if (err) {
         addToast({
@@ -124,10 +135,28 @@ function Cadastro() {
       {
         setDeficiencias(response.data);
       }
+
+      if (load?.id) {
+        if (formikRef.current) {
+          const { setFieldValue } = formikRef.current;
+          setFieldValue('cpf', load.cpf);
+
+          setFieldValue('nome', load.nome);
+          setFieldValue('data_nascimento', load.data_nascimento);
+          setFieldValue('deficiencia', load.deficiencia.id);
+          setFieldValue('uf', load.uf);
+          setFieldValue('ativo', load.ativo);
+          setFieldValue('cep', load.cep);
+          setFieldValue('logradouro', load.logradouro);
+          setFieldValue('num_endereco', load.num_endereco);
+          setFieldValue('localidade', load.localidade);
+          setFieldValue('bairro', load.bairro);
+        }
+      }
     }
 
     getDeficiencias();
-  }, []);
+  }, [setDeficiencias]);
 
   async function getDeficiente() {
     const cpf = formikRef.current?.values.cpf;
@@ -146,19 +175,20 @@ function Cadastro() {
       if (data) {
         setDeficiente(data);
 
-        formikRef.current?.setFieldValue('nome', data.nome);
-        formikRef.current?.setFieldValue(
-          'data_nascimento',
-          data.data_nascimento,
-        );
-        formikRef.current?.setFieldValue('deficiencia', data.deficiencia.id);
-        formikRef.current?.setFieldValue('uf', data.uf);
-        formikRef.current?.setFieldValue('ativo', data.ativo);
-        formikRef.current?.setFieldValue('cep', data.cep);
-        formikRef.current?.setFieldValue('logradouro', data.logradouro);
-        formikRef.current?.setFieldValue('num_endereco', data.num_endereco);
-        formikRef.current?.setFieldValue('localidade', data.localidade);
-        formikRef.current?.setFieldValue('bairro', data.bairro);
+        if (formikRef.current) {
+          const { setFieldValue } = formikRef.current;
+
+          setFieldValue('nome', data.nome);
+          setFieldValue('data_nascimento', data.data_nascimento);
+          setFieldValue('deficiencia', data.deficiencia.id);
+          setFieldValue('uf', data.uf);
+          setFieldValue('ativo', data.ativo);
+          setFieldValue('cep', data.cep);
+          setFieldValue('logradouro', data.logradouro);
+          setFieldValue('num_endereco', data.num_endereco);
+          setFieldValue('localidade', data.localidade);
+          setFieldValue('bairro', data.bairro);
+        }
 
         addToast({
           type: 'success',
@@ -202,7 +232,7 @@ function Cadastro() {
                 type="text"
                 onBlur={getDeficiente}
                 maxLength={11}
-                autoFocus
+                // autoFocus
                 // required
               />
             </label>
