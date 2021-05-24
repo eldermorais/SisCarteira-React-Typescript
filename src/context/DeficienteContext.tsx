@@ -35,13 +35,28 @@ interface DeficienteProviderProps {
 interface SubmitData {
   search: string;
 }
+interface LoadProps {
+  id?: number;
+  nome: string;
+  cpf: string;
+  data_nascimento: string;
+  deficiencia: string;
+  uf: string;
+  ativo: boolean;
+  cep: string;
+  logradouro: string;
+  num_endereco: string;
+  localidade: string;
+  bairro: string;
+}
 
 interface DeficienteContextData {
   deleteDeficiente: (deficiente: DeficienteProps) => void;
-  loadDeficiente: (deficiente: DeficienteProps) => void;
+  loadDeficiente: (deficiente: LoadProps) => void;
   handleSubmit: (form: SubmitData) => Promise<void>;
   deficientes: DeficienteProps[];
-  load: DeficienteProps | undefined;
+  load: LoadProps | undefined;
+  getList: () => Promise<void>;
 }
 
 const DeficienteContext = createContext<DeficienteContextData>(
@@ -50,15 +65,18 @@ const DeficienteContext = createContext<DeficienteContextData>(
 
 const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
   const [deficientes, setDeficientes] = useState<DeficienteProps[]>([]);
-  const [load, setLoad] = useState<DeficienteProps>();
+  const [load, setLoad] = useState<LoadProps>();
+
+  async function getList() {
+    console.log(deficientes);
+    const response = await api.get('/deficientes?_sort=nome:ASC');
+    setDeficientes(response.data);
+    console.log(deficientes);
+  }
 
   useEffect(() => {
-    async function getList() {
-      const response = await api.get('/deficientes?_sort=nome:ASC');
-      setDeficientes(response.data);
-    }
     getList();
-  }, [setDeficientes]);
+  }, [setDeficientes, setLoad]);
 
   const handleSubmit = useCallback(
     async ({ search }) => {
@@ -84,12 +102,28 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
   );
 
   const loadDeficiente = useCallback(
-    async (deficiente: DeficienteProps) => {
+    async (deficiente: LoadProps) => {
       await setLoad(deficiente);
-      console.log(deficiente);
+
+      setLoad(initialValues);
     },
+
     [setLoad, load],
   );
+
+  const initialValues: LoadProps = {
+    nome: '',
+    cpf: '',
+    data_nascimento: '',
+    deficiencia: '',
+    uf: '',
+    ativo: false,
+    cep: '',
+    logradouro: '',
+    num_endereco: '',
+    localidade: '',
+    bairro: '',
+  };
 
   return (
     <DeficienteContext.Provider
@@ -99,6 +133,7 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
         handleSubmit,
         deficientes: deficientes,
         load: load,
+        getList,
       }}
     >
       {children}

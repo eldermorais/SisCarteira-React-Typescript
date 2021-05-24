@@ -31,6 +31,13 @@ export const ListTable = styled.table`
     border-bottom: solid 2px #312e38;
     color: #ff9000;
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    td {
+      font-size: 12px;
+    }
+  }
 `;
 
 export const Buttons = styled.div`
@@ -52,6 +59,13 @@ export const Buttons = styled.div`
   > button + button {
     background: #dc3545;
     margin-left: 8px;
+  }
+
+  @media (max-width: 768px) {
+    > button + button {
+      margin-left: 0px;
+      margin-top: 4px;
+    }
   }
 `;
 

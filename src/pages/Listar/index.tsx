@@ -16,7 +16,7 @@ import {
   ContainerSearch,
 } from './styles';
 import { useDeficiente } from '../../context/DeficienteContext';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import history from '../../routes/history';
 
 interface SubmitData {
@@ -24,14 +24,24 @@ interface SubmitData {
 }
 
 function Listar() {
-  // const [deficientes, setDeficientes] = useState<DeficienteProps[]>([]);
-
-  const { deleteDeficiente, deficientes, handleSubmit, loadDeficiente } =
-    useDeficiente();
+  const {
+    deleteDeficiente,
+    deficientes,
+    handleSubmit,
+    loadDeficiente,
+    getList,
+  } = useDeficiente();
 
   const validations = Yup.object().shape({
     search: Yup.string(),
   });
+
+  useEffect(() => {
+    getList();
+    return () => {
+      getList();
+    };
+  }, []);
 
   const handleSearch = async (data: SubmitData) => {
     try {
@@ -40,14 +50,6 @@ function Listar() {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   async function getList() {
-  //     const response = await api.get('/deficientes?_sort=nome:ASC');
-  //     setDeficientes(response.data);
-  //   }
-  //   getList();
-  // }, [setDeficientes]);
 
   const editDeficiente = useCallback((deficiente) => {
     loadDeficiente(deficiente);
@@ -63,7 +65,6 @@ function Listar() {
         initialValues={{ search: '' }}
         onSubmit={handleSearch}
         validationSchema={validations}
-        // innerRef={formikRef}
       >
         <Form>
           <ContainerSearch>

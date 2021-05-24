@@ -22,7 +22,7 @@ interface DeficienciaFormData {
   descricao: string;
 }
 
-interface RegisterFormData {
+export interface RegisterFormData {
   id?: number;
   nome: string;
   cpf: string;
@@ -130,6 +130,8 @@ function Cadastro() {
   }
 
   useEffect(() => {
+    setDeficiente(load);
+
     async function getDeficiencias() {
       const response = await api.get('categorias');
       {
@@ -139,24 +141,21 @@ function Cadastro() {
       if (load?.id) {
         if (formikRef.current) {
           const { setFieldValue } = formikRef.current;
-          setFieldValue('cpf', load.cpf);
-
-          setFieldValue('nome', load.nome);
-          setFieldValue('data_nascimento', load.data_nascimento);
-          setFieldValue('deficiencia', load.deficiencia.id);
-          setFieldValue('uf', load.uf);
-          setFieldValue('ativo', load.ativo);
-          setFieldValue('cep', load.cep);
-          setFieldValue('logradouro', load.logradouro);
-          setFieldValue('num_endereco', load.num_endereco);
-          setFieldValue('localidade', load.localidade);
-          setFieldValue('bairro', load.bairro);
+          setFieldValue('cpf', load?.cpf);
+          addToast({
+            type: 'info',
+            title: 'pressione a tecla TAB para editar cadastro',
+          });
         }
       }
     }
 
     getDeficiencias();
-  }, [setDeficiencias]);
+
+    return () => {
+      setDeficiente(initialValues);
+    };
+  }, [setDeficiencias, setDeficiente]);
 
   async function getDeficiente() {
     const cpf = formikRef.current?.values.cpf;
@@ -195,6 +194,22 @@ function Cadastro() {
           title: 'CPF já está cadastrado',
           description: 'Você pode atualizar os dados do cadastro',
         });
+      } else {
+        setDeficiente(initialValues);
+        if (formikRef.current) {
+          const { setFieldValue } = formikRef.current;
+
+          setFieldValue('nome', '');
+          setFieldValue('data_nascimento', '');
+          setFieldValue('deficiencia', '');
+          setFieldValue('uf', '');
+          setFieldValue('ativo', '');
+          setFieldValue('cep', '');
+          setFieldValue('logradouro', '');
+          setFieldValue('num_endereco', '');
+          setFieldValue('localidade', '');
+          setFieldValue('bairro', '');
+        }
       }
     }
   }
@@ -232,7 +247,7 @@ function Cadastro() {
                 type="text"
                 onBlur={getDeficiente}
                 maxLength={11}
-                // autoFocus
+                autoFocus
                 // required
               />
             </label>
