@@ -68,7 +68,6 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
   const [load, setLoad] = useState<LoadProps>();
 
   async function getList() {
-    console.log(deficientes);
     const response = await api.get('/deficientes?_sort=nome:ASC');
     setDeficientes(response.data);
   }
