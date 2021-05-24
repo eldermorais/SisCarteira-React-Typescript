@@ -71,7 +71,6 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
     console.log(deficientes);
     const response = await api.get('/deficientes?_sort=nome:ASC');
     setDeficientes(response.data);
-    console.log(deficientes);
   }
 
   useEffect(() => {
