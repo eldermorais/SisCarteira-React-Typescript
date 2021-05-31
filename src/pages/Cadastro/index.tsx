@@ -15,7 +15,10 @@ import { FiCheck } from 'react-icons/fi';
 import axios from 'axios';
 import { useToast } from '../../context/ToastContext';
 import { testaCPF } from '../../utils/utils';
-import { useDeficiente } from '../../context/DeficienteContext';
+import {
+  DeficienteProps,
+  useDeficiente,
+} from '../../context/DeficienteContext';
 
 interface DeficienciaFormData {
   id: number;
@@ -39,13 +42,12 @@ export interface RegisterFormData {
 
 function Cadastro() {
   const [deficiencias, setDeficiencias] = useState<DeficienciaFormData[]>([]);
-
-  const [deficiente, setDeficiente] = useState<RegisterFormData>();
+  const [deficiente, setDeficiente] = useState<DeficienteProps>();
 
   const { addToast } = useToast();
   const { load } = useDeficiente();
 
-  const formikRef = useRef<FormikProps<RegisterFormData>>(null);
+  const formikRef = useRef<FormikProps<DeficienteProps>>(null);
 
   const validations = Yup.object().shape({
     nome: Yup.string().required('digite o nome'),
@@ -82,12 +84,21 @@ function Cadastro() {
         }
       } catch (err) {
         if (!(err instanceof Yup.ValidationError)) {
-          addToast({
-            type: 'error',
-            title: 'Ocorreu um erro',
-            description:
-              'Ocorreu um erro ao fazer o cadastro. Verifique os campos ou sua conexâo',
-          });
+          if (String(err) == 'Error: Request failed with status code 403') {
+            addToast({
+              type: 'error',
+              title: 'Sem Permissão',
+              description:
+                'Ocorreu um erro ao fazer o cadastro. Você não tem permissão para isso',
+            });
+          } else {
+            addToast({
+              type: 'error',
+              title: 'Ocorreu um erro',
+              description:
+                'Ocorreu um erro ao fazer o cadastro. Verifique os campos ou sua conexâo',
+            });
+          }
         }
       }
     },
@@ -214,11 +225,11 @@ function Cadastro() {
     }
   }
 
-  const initialValues: RegisterFormData = {
+  const initialValues: DeficienteProps = {
     nome: '',
     cpf: '',
     data_nascimento: '',
-    deficiencia: '',
+    deficiencia: { id: '', descricao: '' },
     uf: '',
     ativo: false,
     cep: '',
@@ -227,6 +238,7 @@ function Cadastro() {
     localidade: '',
     bairro: '',
   };
+
   return (
     <Container>
       <Formik
@@ -239,7 +251,6 @@ function Cadastro() {
           <h1>Cadastro</h1>
           <FormGroup1>
             <label htmlFor="cpf">
-              CPF
               <Input
                 id="cpf"
                 name="cpf"
@@ -252,7 +263,6 @@ function Cadastro() {
               />
             </label>
             <label htmlFor="nome">
-              Nome completo
               <Input id="nome" name="nome" placeholder="Nome" type="text" />
             </label>
           </FormGroup1>
@@ -289,7 +299,6 @@ function Cadastro() {
 
           <FormGroup3>
             <label htmlFor="cep">
-              Cep
               <Input
                 id="cep"
                 name="cep"
@@ -300,7 +309,6 @@ function Cadastro() {
               />
             </label>
             <label htmlFor="logradouro">
-              Rua
               <Input
                 id="logradouro"
                 name="logradouro"
@@ -309,7 +317,6 @@ function Cadastro() {
               />
             </label>
             <label htmlFor="num_endereco">
-              Número
               <Input
                 id="num_endereco"
                 name="num_endereco"
@@ -321,11 +328,9 @@ function Cadastro() {
 
           <FormGroup4>
             <label htmlFor="bairro">
-              Bairro
               <Input id="bairro" name="bairro" placeholder="Bairro" />
             </label>
             <label htmlFor="localidade">
-              Cidade
               <Input
                 id="localidade"
                 name="localidade"
@@ -334,7 +339,6 @@ function Cadastro() {
               />
             </label>
             <label htmlFor="uf">
-              Estado
               <Input id="uf" name="uf" placeholder="Estado" type="text" />
             </label>
           </FormGroup4>

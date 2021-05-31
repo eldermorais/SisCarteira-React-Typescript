@@ -1,6 +1,7 @@
 import React, {
   createContext,
   ReactNode,
+  SetStateAction,
   useCallback,
   useContext,
   useEffect,
@@ -9,10 +10,13 @@ import React, {
 import api from '../services/api';
 
 interface DeficienciaData {
-  id: number;
+  id: string;
   descricao: string;
 }
-
+interface FotoData {
+  id: string;
+  url: string;
+}
 export interface DeficienteProps {
   id?: number;
   nome: string;
@@ -26,16 +30,17 @@ export interface DeficienteProps {
   num_endereco: string;
   localidade: string;
   bairro: string;
+  foto?: FotoData;
 }
 
-interface DeficienteProviderProps {
+export interface DeficienteProviderProps {
   children: ReactNode;
 }
 
 interface SubmitData {
   search: string;
 }
-interface LoadProps {
+export interface LoadProps {
   id?: number;
   nome: string;
   cpf: string;
@@ -52,11 +57,16 @@ interface LoadProps {
 
 interface DeficienteContextData {
   deleteDeficiente: (deficiente: DeficienteProps) => void;
-  loadDeficiente: (deficiente: LoadProps) => void;
+  loadDeficiente: (deficiente: DeficienteProps) => void;
   handleSubmit: (form: SubmitData) => Promise<void>;
   deficientes: DeficienteProps[];
-  load: LoadProps | undefined;
+  load: DeficienteProps | undefined;
   getList: () => Promise<void>;
+  countTotal: number;
+  limite: number;
+  pages: number[];
+  currentPage: number;
+  setCurrentPage: React.Dispatch<SetStateAction<number>>;
 }
 
 const DeficienteContext = createContext<DeficienteContextData>(
@@ -65,23 +75,57 @@ const DeficienteContext = createContext<DeficienteContextData>(
 
 const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
   const [deficientes, setDeficientes] = useState<DeficienteProps[]>([]);
-  const [load, setLoad] = useState<LoadProps>();
+  const [countTotal, setCountTotal] = useState(0);
+  const [limite, setLimite] = useState(2);
+  const [start, setStart] = useState(0);
+
+  const [pages, setPages] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const [load, setLoad] = useState<DeficienteProps>();
 
   async function getList() {
-    const response = await api.get('/deficientes?_sort=nome:ASC');
+    const response = await api.get(
+      `/deficientes?_start=${start}&_limit=${limite}&_sort=nome:ASC`,
+    );
     setDeficientes(response.data);
+    const countResponse = await api.get(
+      `/deficientes/count?_start=${start}&_limit=${limite}&_sort=nome:ASC`,
+    );
+    setCountTotal(countResponse.data);
   }
 
   useEffect(() => {
     getList();
-  }, [setDeficientes, setLoad]);
+  }, [setDeficientes, setLoad, start]);
+
+  useEffect(() => {
+    const totalPages = Math.ceil(countTotal / limite);
+    const arrayPages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      arrayPages.push(i);
+    }
+    setPages(arrayPages);
+  }, [countTotal]);
+
+  useEffect(() => {
+    const inicio = (currentPage - 1) * limite;
+    setStart(inicio);
+  }, [currentPage, start]);
 
   const handleSubmit = useCallback(
     async ({ search }) => {
       const response = await api.get(
-        `https://strapi-siscarteita.herokuapp.com/deficientes?_where[_or][0][nome_contains]=${search}&_where[_or][1][cpf]=${search}`,
+        `https://strapi-siscarteita.herokuapp.com/deficientes?_start=${start}&_limit=${limite}&_where[_or][0][nome_contains]=${search}&_where[_or][1][cpf]=${search}`,
       );
+
       setDeficientes(response.data);
+
+      const countResponse = await api.get(
+        `https://strapi-siscarteita.herokuapp.com/deficientes/count?_start=${start}&_limit=${limite}&_where[_or][0][nome_contains]=${search}&_where[_or][1][cpf]=${search}`,
+      );
+
+      setCountTotal(countResponse.data);
     },
     [setDeficientes],
   );
@@ -100,7 +144,7 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
   );
 
   const loadDeficiente = useCallback(
-    async (deficiente: LoadProps) => {
+    async (deficiente: DeficienteProps) => {
       await setLoad(deficiente);
 
       setLoad(initialValues);
@@ -109,11 +153,11 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
     [setLoad, load],
   );
 
-  const initialValues: LoadProps = {
+  const initialValues: DeficienteProps = {
     nome: '',
     cpf: '',
     data_nascimento: '',
-    deficiencia: '',
+    deficiencia: { id: '', descricao: '' },
     uf: '',
     ativo: false,
     cep: '',
@@ -121,6 +165,7 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
     num_endereco: '',
     localidade: '',
     bairro: '',
+    foto: { id: '', url: '' },
   };
 
   return (
@@ -132,6 +177,11 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
         deficientes: deficientes,
         load: load,
         getList,
+        countTotal: countTotal,
+        limite: limite,
+        pages: pages,
+        currentPage: currentPage,
+        setCurrentPage: setCurrentPage,
       }}
     >
       {children}

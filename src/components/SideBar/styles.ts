@@ -11,6 +11,7 @@ export const Container = styled.div<SideBarProps>`
   border-radius: 0 10px 10px 0;
   display: flex;
   flex-direction: column;
+  z-index: 1;
   > div {
     display: none;
   }

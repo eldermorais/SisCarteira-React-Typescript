@@ -11,7 +11,7 @@ export const Container = styled.div`
   }
 
   label {
-    color: #f4ede8;
+    color: #666360;
     margin-left: 24px;
   }
 

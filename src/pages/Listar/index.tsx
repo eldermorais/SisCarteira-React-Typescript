@@ -5,6 +5,7 @@ import {
   FiArrowLeft,
   FiArrowRight,
   FiEdit,
+  FiPrinter,
   FiSearch,
   FiTrash,
 } from 'react-icons/fi';
@@ -14,22 +15,28 @@ import {
   ListTable,
   Pagination,
   ContainerSearch,
+  Content,
 } from './styles';
 import { useDeficiente } from '../../context/DeficienteContext';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import history from '../../routes/history';
+import Modal from '../../components/Modal';
 
 interface SubmitData {
   search: string;
 }
 
 function Listar() {
+  const [showModal, setShowModal] = useState(false);
+
   const {
-    deleteDeficiente,
     deficientes,
     handleSubmit,
     loadDeficiente,
     getList,
+    pages,
+    setCurrentPage,
+    currentPage,
   } = useDeficiente();
 
   const validations = Yup.object().shape({
@@ -57,85 +64,116 @@ function Listar() {
     history.push('/cadastro');
   }, []);
 
+  const printDeficiente = useCallback((deficiente) => {
+    loadDeficiente(deficiente);
+
+    history.push('/print');
+  }, []);
+
+  const deleteDeficiente = useCallback((deficiente) => {
+    loadDeficiente(deficiente);
+    setShowModal(true);
+  }, []);
+
   return (
     <Container>
-      <h1>Cadastrados</h1>
+      {showModal && <Modal setShow={setShowModal} />}
 
-      <Formik
-        initialValues={{ search: '' }}
-        onSubmit={handleSearch}
-        validationSchema={validations}
-      >
-        <Form>
-          <ContainerSearch>
-            <h3>Buscar</h3>
+      <Content>
+        <h1>Cadastrados</h1>
 
-            <label htmlFor="search">
-              <Input
-                type="text"
-                id="search"
-                name="search"
-                icon={FiSearch}
-                placeholder="Digite o CPF ou o Nome"
-              />
-            </label>
+        <ContainerSearch>
+          <Formik
+            initialValues={{ search: '' }}
+            onSubmit={handleSearch}
+            validationSchema={validations}
+          >
+            <Form>
+              <h3>Buscar</h3>
 
-            <button type="submit">Buscar</button>
-          </ContainerSearch>
-        </Form>
-      </Formik>
+              <label htmlFor="search">
+                <Input
+                  type="text"
+                  id="search"
+                  name="search"
+                  icon={FiSearch}
+                  placeholder="Digite o CPF ou o Nome"
+                />
+              </label>
 
-      <ListTable>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>CPF</th>
-            <th>Nome</th>
-            <th>Deficiencia</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {deficientes.map((deficiente) => (
-            <tr key={deficiente.id}>
-              <td>{deficiente.id}</td>
-              <td>{deficiente.cpf}</td>
-              <td>{deficiente.nome}</td>
-              <td>{deficiente.deficiencia.descricao}</td>
-              <td>
-                <Buttons>
-                  <button
-                    className="btn btn-warning ml-2"
-                    onClick={() => editDeficiente(deficiente)}
-                  >
-                    <FiEdit />
-                  </button>
-                  <button
-                    className="btn btn-danger ml-2"
-                    onClick={() => deleteDeficiente(deficiente)}
-                  >
-                    <FiTrash />
-                  </button>
-                </Buttons>
-              </td>
+              <button type="submit">Buscar</button>
+            </Form>
+          </Formik>
+        </ContainerSearch>
+
+        <ListTable>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>CPF</th>
+              <th>Nome</th>
+              <th>Deficiencia</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </ListTable>
+          </thead>
+          <tbody>
+            {deficientes.map((deficiente) => (
+              <tr key={deficiente.id}>
+                <td>{deficiente.id}</td>
+                <td>{deficiente.cpf}</td>
+                <td>{deficiente.nome}</td>
+                <td>{deficiente.deficiencia.descricao}</td>
+                <td>
+                  <Buttons>
+                    <button
+                      className="btn btn-warning ml-2"
+                      onClick={() => editDeficiente(deficiente)}
+                    >
+                      <FiEdit />
+                    </button>
+                    <button
+                      className="btn btn-danger ml-2"
+                      onClick={() => deleteDeficiente(deficiente)}
+                    >
+                      <FiTrash />
+                    </button>
+                    <button
+                      className="btn btn-danger ml-2"
+                      onClick={() => printDeficiente(deficiente)}
+                    >
+                      <FiPrinter />
+                    </button>
+                  </Buttons>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </ListTable>
 
-      <Pagination>
-        <button type="button">
-          <FiArrowLeft />
-        </button>
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-        <button>5</button>
-        <button>
-          <FiArrowRight />
-        </button>
-      </Pagination>
+        <Pagination>
+          {currentPage > 1 && (
+            <button
+              type="button"
+              onClick={() => setCurrentPage(currentPage - 1)}
+            >
+              <FiArrowLeft />
+            </button>
+          )}
+          {pages.map((page) => (
+            <button key={page} onClick={() => setCurrentPage(page)}>
+              {page}
+            </button>
+          ))}
+          {currentPage < pages.length && (
+            <button
+              type="button"
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              <FiArrowRight />
+            </button>
+          )}
+        </Pagination>
+      </Content>
     </Container>
   );
 }

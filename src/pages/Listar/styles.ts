@@ -4,9 +4,10 @@ export const Container = styled.div`
   min-height: calc(100vh - 60px);
   width: 100%;
   height: 100%;
+  position: relative;
 
   h1 {
-    margin: 24px 0;
+    margin: 32px 0;
     text-align: center;
   }
 `;
@@ -93,22 +94,42 @@ export const Pagination = styled.div`
 `;
 
 export const ContainerSearch = styled.div`
-  width: 300px;
+  width: 100%;
   margin: 0 24px 8px;
 
-  button {
-    margin-top: 16px;
-    background: #ff9000;
-    border: 0;
-    border-radius: 5px;
-    height: 36px;
-    width: 70px;
+  form {
+    width: 300px;
 
-    color: #232129;
-    font-weight: 500;
+    button {
+      margin-top: 16px;
+      background: #ff9000;
+      border: 0;
+      border-radius: 5px;
+      height: 36px;
+      width: 70px;
 
-    :hover {
-      filter: brightness(0.9);
+      color: #232129;
+      font-weight: 500;
+
+      :hover {
+        filter: brightness(0.9);
+      }
+    }
+  }
+`;
+
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 700px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    td {
+      font-size: 12px;
     }
   }
 `;

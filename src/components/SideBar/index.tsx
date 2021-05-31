@@ -25,10 +25,10 @@ function SideBar() {
             <FiArchive /> Cadastro{' '}
           </Link>
 
-          <Link to="/relatorio" onClick={(isOpen) => setIsOpen(!isOpen)}>
+          {/* <Link to="/relatorio" onClick={(isOpen) => setIsOpen(!isOpen)}>
             {' '}
             <FiClipboard /> Relatório{' '}
-          </Link>
+          </Link> */}
 
           <Link to="/listar" onClick={(isOpen) => setIsOpen(!isOpen)}>
             {' '}
