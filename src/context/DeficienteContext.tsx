@@ -78,6 +78,7 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
   const [countTotal, setCountTotal] = useState(0);
   const [limite, setLimite] = useState(2);
   const [start, setStart] = useState(0);
+  setLimite;
 
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);

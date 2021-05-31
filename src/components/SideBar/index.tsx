@@ -1,6 +1,6 @@
 import Hamburger from 'hamburger-react';
 import React, { useState } from 'react';
-import { FiArchive, FiClipboard, FiHome, FiList } from 'react-icons/fi';
+import { FiArchive, FiHome, FiList } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Container } from './styles';
