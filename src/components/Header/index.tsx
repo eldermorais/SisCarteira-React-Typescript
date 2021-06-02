@@ -15,7 +15,7 @@ export default function Header() {
       </div>
       {!!user && (
         <div>
-          <Link to="/user">
+          <Link to="/profile">
             <FiUser /> <span>{user.displayName}</span>
           </Link>
           <button type="button" onClick={signOut}>

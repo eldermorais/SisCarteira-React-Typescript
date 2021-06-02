@@ -1,4 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+interface BtnProps {
+  isSelect?: boolean;
+}
 
 export const Container = styled.div`
   min-height: calc(100vh - 60px);
@@ -56,6 +60,10 @@ export const Buttons = styled.div`
       filter: brightness(0.9);
     }
   }
+  button:nth-child(3) {
+    background-color: #232129;
+    color: #f4ede8;
+  }
 
   > button + button {
     background: #dc3545;
@@ -74,23 +82,6 @@ export const Pagination = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  button {
-    background: transparent;
-    border: 0;
-    color: #ff9000;
-
-    padding: 8px;
-    height: 50px;
-    width: 50px;
-
-    font-size: 18px;
-
-    &:hover {
-      background: #f4ede8;
-      color: #232129;
-    }
-  }
 `;
 
 export const ContainerSearch = styled.div`
@@ -132,4 +123,36 @@ export const Content = styled.div`
       font-size: 12px;
     }
   }
+`;
+
+export const PaginationItem = styled.div<BtnProps>`
+  color: #ff9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  padding: 8px;
+  height: 50px;
+  width: 50px;
+
+  font-size: 18px;
+
+  &:hover {
+    background: #f4ede8;
+    color: #232129;
+  }
+
+  ${(props) =>
+    props.isSelect &&
+    css`
+      background: #f4ede8;
+    `}
+`;
+
+export const PaginationArrows = styled.div`
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
 `;

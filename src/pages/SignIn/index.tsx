@@ -4,7 +4,7 @@ import { Form, Formik, FormikProps } from 'formik';
 import Input from '../../components/Input';
 import { FiLock, FiMail } from 'react-icons/fi';
 import Button from '../../components/Button';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import * as Yup from 'yup';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -15,7 +15,7 @@ interface SignInFormData {
 }
 
 function SignIn() {
-  const { signIn } = useAuth();
+  const { signIn, loading } = useAuth();
   const { addToast } = useToast();
 
   const formikRef = useRef<FormikProps<SignInFormData>>(null);
@@ -29,7 +29,7 @@ function SignIn() {
       .required('Senha obrigatória.'),
   });
 
-  const handleLogin = async (data: SignInFormData) => {
+  const handleLogin = useCallback(async (data: SignInFormData) => {
     try {
       await validations.validate(data);
       await signIn({
@@ -55,9 +55,12 @@ function SignIn() {
         });
       }
     }
-  };
+  }, []);
 
-  const initialValues: SignInFormData = { identifier: '', password: '' };
+  const initialValues: SignInFormData = {
+    identifier: 'example@gmail.com',
+    password: '123456',
+  };
   return (
     <Container>
       <Content>
@@ -89,7 +92,9 @@ function SignIn() {
               placeholder="Senha"
             />
 
-            <Button type="submit">Entrar</Button>
+            <Button loading={loading} disabled={loading} type="submit">
+              Entrar
+            </Button>
           </Form>
         </Formik>
       </Content>

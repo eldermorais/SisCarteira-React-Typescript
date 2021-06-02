@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import api from '../services/api';
+import { useAuth } from './AuthContext';
 
 interface DeficienciaData {
   id: string;
@@ -74,6 +75,8 @@ const DeficienteContext = createContext<DeficienteContextData>(
 );
 
 const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
+  const { user } = useAuth();
+
   const [deficientes, setDeficientes] = useState<DeficienteProps[]>([]);
   const [countTotal, setCountTotal] = useState(0);
   const [limite, setLimite] = useState(2);
@@ -86,14 +89,16 @@ const DeficienteProvider = ({ children }: DeficienteProviderProps) => {
   const [load, setLoad] = useState<DeficienteProps>();
 
   async function getList() {
-    const response = await api.get(
-      `/deficientes?_start=${start}&_limit=${limite}&_sort=nome:ASC`,
-    );
-    setDeficientes(response.data);
-    const countResponse = await api.get(
-      `/deficientes/count?_start=${start}&_limit=${limite}&_sort=nome:ASC`,
-    );
-    setCountTotal(countResponse.data);
+    if (user) {
+      const response = await api.get(
+        `/deficientes?_start=${start}&_limit=${limite}&_sort=nome:ASC`,
+      );
+      setDeficientes(response.data);
+      const countResponse = await api.get(
+        `/deficientes/count?_start=${start}&_limit=${limite}&_sort=nome:ASC`,
+      );
+      setCountTotal(countResponse.data);
+    }
   }
 
   useEffect(() => {

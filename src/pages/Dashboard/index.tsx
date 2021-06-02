@@ -36,7 +36,7 @@ function Dashboard() {
     getCount();
     getCountMonth();
     getCountYear();
-  }, []);
+  }, [countYear, countMonth, countDeficientes]);
   return (
     <Container>
       <h1>Dados</h1>

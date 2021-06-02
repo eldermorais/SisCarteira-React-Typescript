@@ -40,6 +40,7 @@ interface AuthContextData {
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signOut: () => void;
   jwt: string;
+  loading: boolean;
 }
 
 interface AuthProviderProps {
@@ -49,6 +50,8 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [loading, setLoading] = useState(false);
+
   const [data, setData] = useState<AuthState>(() => {
     const jwt = localStorage.getItem('@SisCarteira:jwt');
     const user = localStorage.getItem('@SisCarteira:user');
@@ -63,15 +66,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   });
 
   const signIn = useCallback(async ({ identifier, password }) => {
+    setLoading(true);
     const response = await api.post<AuthState>('auth/local', {
       identifier,
       password,
     });
+    setLoading(false);
 
     const { jwt, user } = response.data;
+    api.defaults.headers.authorization = `Bearer ${jwt}`;
 
     setData({ jwt, user });
-    api.defaults.headers.authorization = `Bearer ${jwt}`;
 
     localStorage.setItem('@SisCarteira:jwt', jwt);
     localStorage.setItem('@SisCarteira:user', JSON.stringify(user));
@@ -80,9 +85,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = useCallback(() => {
     localStorage.removeItem('@SisCarteira:jwt');
     localStorage.removeItem('@SisCarteira:user');
+    api.defaults.headers.authorization = '';
 
     setData({} as AuthState);
-  }, []);
+  }, [data, setData]);
 
   return (
     <AuthContext.Provider
@@ -91,6 +97,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         signIn,
         jwt: data.jwt,
         signOut,
+        loading: loading,
       }}
     >
       {children}

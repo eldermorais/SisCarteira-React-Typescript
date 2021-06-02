@@ -16,6 +16,8 @@ import {
   Pagination,
   ContainerSearch,
   Content,
+  PaginationItem,
+  PaginationArrows,
 } from './styles';
 import { useDeficiente } from '../../context/DeficienteContext';
 import { useCallback, useEffect, useState } from 'react';
@@ -125,22 +127,13 @@ function Listar() {
                 <td>{deficiente.deficiencia.descricao}</td>
                 <td>
                   <Buttons>
-                    <button
-                      className="btn btn-warning ml-2"
-                      onClick={() => editDeficiente(deficiente)}
-                    >
+                    <button onClick={() => editDeficiente(deficiente)}>
                       <FiEdit />
                     </button>
-                    <button
-                      className="btn btn-danger ml-2"
-                      onClick={() => deleteDeficiente(deficiente)}
-                    >
+                    <button onClick={() => deleteDeficiente(deficiente)}>
                       <FiTrash />
                     </button>
-                    <button
-                      className="btn btn-danger ml-2"
-                      onClick={() => printDeficiente(deficiente)}
-                    >
+                    <button onClick={() => printDeficiente(deficiente)}>
                       <FiPrinter />
                     </button>
                   </Buttons>
@@ -151,27 +144,29 @@ function Listar() {
         </ListTable>
 
         <Pagination>
-          {currentPage > 1 && (
-            <button
-              type="button"
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              <FiArrowLeft />
-            </button>
-          )}
+          <PaginationArrows>
+            {currentPage > 1 && (
+              <PaginationItem onClick={() => setCurrentPage(currentPage - 1)}>
+                <FiArrowLeft />
+              </PaginationItem>
+            )}
+          </PaginationArrows>
           {pages.map((page) => (
-            <button key={page} onClick={() => setCurrentPage(page)}>
-              {page}
-            </button>
-          ))}
-          {currentPage < pages.length && (
-            <button
-              type="button"
-              onClick={() => setCurrentPage(currentPage + 1)}
+            <PaginationItem
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              isSelect={page === currentPage}
             >
-              <FiArrowRight />
-            </button>
-          )}
+              {page}
+            </PaginationItem>
+          ))}
+          <PaginationArrows>
+            {currentPage < pages.length && (
+              <PaginationItem onClick={() => setCurrentPage(currentPage + 1)}>
+                <FiArrowRight />
+              </PaginationItem>
+            )}
+          </PaginationArrows>
         </Pagination>
       </Content>
     </Container>
