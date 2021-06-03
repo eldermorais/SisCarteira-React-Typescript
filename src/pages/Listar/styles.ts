@@ -93,14 +93,21 @@ export const ContainerSearch = styled.div`
 
     button {
       margin-top: 16px;
-      background: #ff9000;
+      background: rgb(2, 0, 36);
+      background: linear-gradient(
+        90deg,
+        rgba(2, 0, 36, 1) 0%,
+        rgba(9, 62, 121, 1) 50%,
+        rgba(0, 212, 255, 1) 100%
+      );
       border: 0;
       border-radius: 5px;
       height: 36px;
       width: 70px;
 
-      color: #232129;
+      color: #f4ede8;
       font-weight: 500;
+      transition: filter 0.2s;
 
       :hover {
         filter: brightness(0.9);
@@ -138,6 +145,9 @@ export const PaginationItem = styled.div<BtnProps>`
 
   font-size: 18px;
 
+  border-radius: 5px;
+  transition: all 0.2s;
+
   &:hover {
     background: #f4ede8;
     color: #232129;
@@ -147,6 +157,7 @@ export const PaginationItem = styled.div<BtnProps>`
     props.isSelect &&
     css`
       background: #f4ede8;
+      color: #232129;
     `}
 `;
 

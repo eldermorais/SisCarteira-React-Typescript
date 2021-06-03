@@ -25,14 +25,15 @@ export const Container = styled.div<ContainerProps>`
   ${(props) =>
     props.isFocused &&
     css`
-      color: #ff9000;
-      border: 2px solid #ff9000;
+      color: rgba(0, 212, 255, 1);
+      border: 2px solid rgba(9, 62, 121, 1);
+      border-color: ;
     `}
 
   ${(props) =>
     props.isFilled &&
     css`
-      color: #ff9000;
+      color: rgba(0, 212, 255, 1);
     `}
 
     ${(props) =>
