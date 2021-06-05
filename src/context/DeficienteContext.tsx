@@ -16,7 +16,7 @@ interface DeficienciaData {
 }
 interface FotoData {
   id: string;
-  url: string;
+  url?: string;
 }
 export interface DeficienteProps {
   id?: number;

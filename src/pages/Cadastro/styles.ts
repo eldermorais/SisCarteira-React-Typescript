@@ -36,6 +36,43 @@ export const Container = styled.div`
   }
 `;
 
+export const FotoContainer = styled.div`
+  margin: 25px 0;
+  width: 75px;
+  height: 100px;
+  background: grey;
+  position: relative;
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 65px;
+    left: 45px;
+    margin: 0;
+    width: 50px;
+    height: 50px;
+    background: rgba(9, 62, 121, 1);
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    svg {
+      margin: auto;
+      color: rgba(0, 212, 255, 1);
+    }
+    input {
+      display: none;
+    }
+  }
+`;
+
 export const FormGroup1 = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr;

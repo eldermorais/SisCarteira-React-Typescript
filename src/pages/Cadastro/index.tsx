@@ -6,12 +6,13 @@ import {
   FormGroup2,
   FormGroup3,
   FormGroup4,
+  FotoContainer,
 } from './styles';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import api from '../../services/api';
 import Button from '../../components/Button';
-import { FiCheck } from 'react-icons/fi';
+import { FiCamera, FiCheck } from 'react-icons/fi';
 import axios from 'axios';
 import { useToast } from '../../context/ToastContext';
 import { testaCPF } from '../../utils/utils';
@@ -225,6 +226,38 @@ function Cadastro() {
     }
   }
 
+  const handleFotoChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files) {
+        const data = new FormData();
+        data.append('files', event.target.files[0]);
+
+        if (deficiente?.id) {
+          api.post('/upload', data).then((response) => {
+            if (deficiente.foto?.id) {
+              api.delete(`upload/files/${deficiente.foto?.id}`);
+            }
+            const foto = response.data[0].id;
+
+            api
+              .put(`deficientes/${deficiente.id}`, {
+                foto: foto,
+              })
+              .then((response) => {
+                setDeficiente(response.data);
+
+                addToast({
+                  type: 'success',
+                  title: 'Avatar Atualizado',
+                });
+              });
+          });
+        }
+      }
+    },
+    [addToast, deficiente],
+  );
+
   const initialValues: DeficienteProps = {
     nome: '',
     cpf: '',
@@ -237,6 +270,7 @@ function Cadastro() {
     num_endereco: '',
     localidade: '',
     bairro: '',
+    foto: { id: '', url: '' },
   };
 
   return (
@@ -249,6 +283,17 @@ function Cadastro() {
       >
         <Form>
           <h1>Cadastro</h1>
+          <FotoContainer>
+            {deficiente?.id && (
+              <>
+                <img src={deficiente?.foto?.url} alt={deficiente?.nome} />
+              </>
+            )}
+            <label htmlFor="files">
+              <FiCamera />
+              <input id="files" type="file" onChange={handleFotoChange} />
+            </label>
+          </FotoContainer>
           <FormGroup1>
             <label htmlFor="cpf">
               <Input

@@ -18,7 +18,7 @@ interface RoleProps {
   type: string;
 }
 
-interface UserProps {
+export interface UserProps {
   email: string;
   id: string;
   username: string;
@@ -41,6 +41,7 @@ interface AuthContextData {
   signOut: () => void;
   jwt: string;
   loading: boolean;
+  updateUser: (user: UserProps) => void;
 }
 
 interface AuthProviderProps {
@@ -90,6 +91,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setData({} as AuthState);
   }, [data, setData]);
 
+  const updateUser = useCallback(
+    (user: UserProps) => {
+      setData({ user, jwt: data.jwt });
+      localStorage.setItem('@SisCarteira:user', JSON.stringify(user));
+    },
+    [setData],
+  );
+
   return (
     <AuthContext.Provider
       value={{
@@ -98,6 +107,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         jwt: data.jwt,
         signOut,
         loading: loading,
+        updateUser,
       }}
     >
       {children}
