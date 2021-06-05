@@ -104,6 +104,8 @@ function Profile() {
         <Form>
           <h1>Profile</h1>
 
+          <h3>Editar dados</h3>
+
           <FormGroup1>
             <label htmlFor="username">
               Nome
@@ -141,6 +143,8 @@ function Profile() {
               />
             </label>
           </FormGroup3>
+
+          <h3>Alterar senha</h3>
 
           <FormGroup2>
             <label htmlFor="password">

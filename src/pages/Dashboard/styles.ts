@@ -18,10 +18,18 @@ export const Graphics = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const AdditionalData = styled.div`
   width: 100%;
   text-align: center;
   color: #5d5d5d;
+
+  @media (max-width: 768px) {
+    margin: 20px 0;
+  }
 `;

@@ -56,12 +56,12 @@ function PieCharts() {
   return (
     <Container>
       <h3>Total de cadastros por deficiencia</h3>
-      <PieChart width={500} height={400}>
+      <PieChart width={400} height={400}>
         <Pie
           dataKey="value"
           isAnimationActive={false}
           data={data}
-          cx={250}
+          cx={200}
           cy={200}
           outerRadius={80}
           fill="#8884d8"

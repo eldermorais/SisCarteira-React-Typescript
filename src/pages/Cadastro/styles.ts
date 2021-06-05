@@ -1,4 +1,17 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const appearFronTop = keyframes`
+  from{
+    opacity: 0;
+    transform: translateY(-50px);
+    height: 0;
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+    height: 100px;
+  }
+`;
 
 export const Container = styled.div`
   min-height: calc(100vh - 60px);
@@ -42,6 +55,9 @@ export const FotoContainer = styled.div`
   height: 100px;
   background: grey;
   position: relative;
+
+  animation: ${appearFronTop} 1s;
+
   img {
     object-fit: cover;
     width: 100%;

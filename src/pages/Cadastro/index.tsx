@@ -283,17 +283,17 @@ function Cadastro() {
       >
         <Form>
           <h1>Cadastro</h1>
-          <FotoContainer>
-            {deficiente?.id && (
+          {deficiente?.id && (
+            <FotoContainer>
               <>
                 <img src={deficiente?.foto?.url} alt={deficiente?.nome} />
               </>
-            )}
-            <label htmlFor="files">
-              <FiCamera />
-              <input id="files" type="file" onChange={handleFotoChange} />
-            </label>
-          </FotoContainer>
+              <label htmlFor="files">
+                <FiCamera />
+                <input id="files" type="file" onChange={handleFotoChange} />
+              </label>
+            </FotoContainer>
+          )}
           <FormGroup1>
             <label htmlFor="cpf">
               <Input
